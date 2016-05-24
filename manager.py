@@ -54,12 +54,12 @@ change it to first find and store photo ids and then update all
 """
 # find pics to be updated
 photos = []
-page_size = 20
+page_size = 500
 num_photos = 0
 for photo in flickr.walk(user_id='me',min_upload_date='2013-11-04',per_page=page_size):
 	#get the photo id
 	photo_id = photo.get('id')
-	print photo_id
+	#print photo_id
 	photo_info = flickr.photos.getInfo(photo_id=photo_id)
 	
 	#get dates
@@ -68,6 +68,7 @@ for photo in flickr.walk(user_id='me',min_upload_date='2013-11-04',per_page=page
 
 		posted_date = int(dates.get('posted'))
 		taken_date = int(datetime.datetime.strptime(dates.get('taken'),"%Y-%m-%d %H:%M:%S").strftime("%s"))
+		"""
 		try:
 			ET.dump(flickr.photos.setdates(photo_id=photo_id,date_posted=1322677800))
 			ET.dump(flickr.photos.setdates(photo_id=photo_id,date_posted=posted_date))
@@ -76,14 +77,17 @@ for photo in flickr.walk(user_id='me',min_upload_date='2013-11-04',per_page=page
 			print 'resetting'
 			ET.dump(flickr.photos.setdates(photo_id=photo_id,date_posted=posted_date))
 			break
+		"""
 
-"""
 		if posted_date>taken_date:
 			num_photos = num_photos + 1
 			photos.append((photo_id, posted_date, taken_date))
-			#flickr.photos.setdates(photo_id=photo_id,date_posted=taken_date)
+			flickr.photos.setdates(photo_id=photo_id,date_posted=taken_date)
 			#ET.dump(photo_info)
+
 print "will update {0} pics".format(num_photos)
+
+"""
 for photo in photos:
 	print "id: {} posted: {} taken: {}".format(photo[0],photo[1],photo[2])
 """
